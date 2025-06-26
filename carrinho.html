@@ -1,0 +1,244 @@
+<doctype html>
+  <html>
+
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  </head>
+  <bory>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="ariiamstreet.html">ARIIAM STREET</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+          aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="produtos.html">PRODUTOS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="cadastro.html">CADASTRO</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="carrinho.html">CARRINHO</a>
+            <li class="nav-item">
+        </div>
+      </div>
+    </nav>
+  </bory>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+    crossorigin="anonymous"></script>
+  </head>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Carrinho</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      .produto,
+      .carrinho-item {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .produto img,
+      .carrinho-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        margin-right: 10px;
+      }
+
+      .info {
+        flex: 1;
+      }
+
+      .preco {
+        font-weight: bold;
+      }
+
+      .quantidade {
+        width: 50px;
+      }
+
+      button {
+        padding: 5px 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+
+      button:hover {
+        background-color: #c82333;
+      }
+
+      #resumo {
+        margin-top: 20px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      #finalizar {
+        width: 100%;
+        padding: 10px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #finalizar:hover {
+        background: #218838;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h1>Produtos</h1>
+
+    <div class="produto">
+      <img src="blusaoestampa.png" alt="Produto A">
+
+      <div class="info">
+        <div>Produto A</div>
+        <div class="preco">R$ 219,90</div>
+      </div>
+      <input type="number" min="1" value="1" class="quantidade">
+      <button onclick="adicionarAoCarrinho('Produto A', 219, this)">Adicionar</button>
+    </div>
+
+    <div class="produto">
+      <img src="camiseta tasha.png" alt="Produto B">
+      <div class="info">
+        <div>Produto B</div>
+        <div class="preco">R$ 99,90</div>
+      </div>
+      <input type="number" min="1" value="1" class="quantidade">
+      <button onclick="adicionarAoCarrinho('Produto B', 99, this)">Adicionar</button>
+    </div>
+
+    <div class="produto">
+      <img src="webp.webp" alt="Produto C">
+      <div class="info">
+        <div>Produto C</div>
+        <div class="preco">R$ 79,90</div>
+      </div>
+      <input type="number" min="1" value="1" class="quantidade">
+      <button onclick="adicionarAoCarrinho('Produto C', 79, this)">Adicionar</button>
+
+
+    </div>
+    <h1>Carrinho</h1>
+    <div id="carrinho"></div>
+
+    <div id="resumo">
+      <p>Total de Itens: <span id="total-itens">0</span></p>
+      <p>Total: R$ <span id="total-preco">0.00</span></p>
+      <button id="finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
+    </div>
+
+    <script>
+      let carrinho = [];
+
+      function adicionarAoCarrinho(nome, preco, btn) {
+        const quantidadeInput = btn.parentElement.querySelector('.quantidade');
+        const quantidade = parseInt(quantidadeInput.value);
+
+        const existente = carrinho.find(item => item.nome === nome);
+        if (existente) {
+          existente.quantidade += quantidade;
+        } else {
+          carrinho.push({ nome, preco, quantidade });
+        }
+        atualizarCarrinho();
+      }
+
+      function atualizarCarrinho() {
+        const carrinhoDiv = document.getElementById('carrinho');
+        carrinhoDiv.innerHTML = '';
+
+        let totalItens = 0;
+        let totalPreco = 0;
+
+        carrinho.forEach((item, index) => {
+          totalItens += item.quantidade;
+          totalPreco += item.preco * item.quantidade;
+
+          const itemDiv = document.createElement('div');
+          itemDiv.classList.add('carrinho-item');
+
+          itemDiv.innerHTML = `
+          <img src="https://via.placeholder.com/80" alt="${item.nome}">
+          <div class="info">
+            <div>${item.nome}</div>
+            <div>Qtd: ${item.quantidade}</div>
+            <div>Subtotal: R$ ${(item.preco * item.quantidade).toFixed(2)}</div>
+          </div>
+          <button onclick="removerItem(${index})">Remover</button>
+        `;
+
+          carrinhoDiv.appendChild(itemDiv);
+        });
+
+        document.getElementById('total-itens').textContent = totalItens;
+        document.getElementById('total-preco').textContent = totalPreco.toFixed(2);
+      }
+
+      function removerItem(index) {
+        carrinho.splice(index, 1);
+        atualizarCarrinho();
+      }
+
+      function finalizarCompra() {
+        if (carrinho.length === 0) {
+          alert('Seu carrinho está vazio!');
+          return;
+        }
+        const total = carrinho.reduce((sum, item) => sum + item.preco * item.quantidade, 0);
+        alert(`Compra finalizada! Total: R$ ${total.toFixed(2)}`);
+        carrinho = [];
+        atualizarCarrinho();
+      }
+    </script>
+
+    <body>
+
+      <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+          <div class="vw-plugin-top-wrapper"></div>
+        </div>
+      </div>
+      <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+      <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+      </script>
+    </body>
+  </body>
+
+  </html>
+
+  </html>
